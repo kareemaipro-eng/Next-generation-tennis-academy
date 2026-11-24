@@ -300,6 +300,136 @@
       margin-bottom: 14px;
     }
 
+    /* Executive Dashboard Specific Components */
+    .exec-hero {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.88), rgba(15, 118, 110, 0.88));
+      backdrop-filter: blur(22px);
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      border-radius: var(--radius-xl);
+      padding: 18px;
+      color: #fff;
+      margin-bottom: 14px;
+      box-shadow: 0 14px 32px rgba(15, 23, 42, 0.18);
+    }
+
+    .kpi-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 11px;
+      margin-bottom: 14px;
+    }
+
+    .kpi-card {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.92);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      box-shadow: var(--glass-shadow-sm);
+    }
+    .kpi-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .kpi-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .kpi-val {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+    .kpi-sub {
+      font-size: 11px;
+      font-weight: 700;
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Donut Ring Chart */
+    .donut-wrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .donut-ring {
+      width: 86px;
+      height: 86px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.08);
+    }
+    .donut-hole {
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.94);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 15px;
+      color: var(--text-main);
+    }
+
+    /* Progress Bar */
+    .prog-track {
+      width: 100%;
+      height: 9px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.22);
+      overflow: hidden;
+      margin: 6px 0;
+    }
+    .prog-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.5s ease;
+    }
+
+    /* Comparison Row */
+    .comp-row {
+      padding: 12px;
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.92);
+      margin-bottom: 10px;
+    }
+    .comp-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-top: 8px;
+      text-align: center;
+    }
+    .comp-cell {
+      background: rgba(255, 255, 255, 0.72);
+      padding: 6px 4px;
+      border-radius: 10px;
+    }
+    .comp-cell small {
+      display: block;
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .comp-cell strong {
+      font-size: 13px;
+      font-weight: 800;
+    }
+
     /* Filter Pills Row */
     .filter-row {
       display: flex;
@@ -704,7 +834,6 @@
   <div id="toast" class="toast"></div>
 
   <div class="app-shell" id="appShell">
-    <!-- Pull to refresh indicator -->
     <div id="ptrIndicator" class="ptr-indicator">
       <i data-lucide="arrow-down" style="width:14px;height:14px;"></i>
       <span>اسحب للتحديث الفوري</span>
@@ -764,13 +893,13 @@
     </button>
   </nav>
 
-  <!-- Side Drawer for Remaining Sheets -->
+  <!-- Side Drawer for Remaining Sheets & Executive Dashboard -->
   <div id="drawerBackdrop" class="drawer-backdrop" onclick="toggleDrawer(false)"></div>
   <aside id="sideDrawer" class="side-drawer">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
       <div>
         <h3 style="font-size:16px;font-weight:800;">أقسام الأكاديمية</h3>
-        <span style="font-size:11.5px;color:var(--text-muted);">باقي الشيتات والخدمات</span>
+        <span style="font-size:11.5px;color:var(--text-muted);">باقي الشيتات والتحليلات</span>
       </div>
       <button class="icon-pill" onclick="toggleDrawer(false)">
         <i data-lucide="x" style="width:16px;height:16px;"></i>
@@ -840,14 +969,14 @@
 
   <script>
     // =========================================================================
-    // ضع هنا رابط النشر (Web App URL) الخاص بكود Google Apps Script
+    // رابط النشر (Web App URL) الخاص بكود Google Apps Script
     // =========================================================================
     const API_URL = 'https://script.google.com/macros/s/AKfycbw3-iYGotn4n0GX6n1HjaGhMdQgK1-la4kBZCkD31fFZMNHBdLxexCf6VUKBWXQ2f05/exec';
 
     let appState = {
       currentView: 'home',
       loginMode: 'parent',
-      scheduleFilter: 'all', // 'all' | 'upcoming' | 'past'
+      scheduleFilter: 'all',
       eduFilter: 'all',
       user: JSON.parse(localStorage.getItem('nxtgen_user') || 'null'),
       data: null,
@@ -867,11 +996,9 @@
       setupPullToRefresh();
       updateAuthUI();
       refreshData(false);
-      // Auto-sync every 20 seconds so any change in Google Sheet reflects automatically
       appState.autoSyncTimer = setInterval(() => refreshData(false, true), 20000);
     });
 
-    // Pull-to-refresh gesture for mobile WebView
     function setupPullToRefresh() {
       let startY = 0;
       const ptr = document.getElementById('ptrIndicator');
@@ -946,10 +1073,12 @@
 
     function renderDrawerLinks() {
       const role = appState.user?.role || 'guest';
+      const isSuperAdmin = role === 'super_admin';
       const isStaff = ['super_admin', 'admin_staff', 'coach'].includes(role);
       const isParent = role === 'parent';
 
       const items = [
+        { id: 'dashboard', label: 'لوحة تحكم المدير العام (KPIs)', icon: 'bar-chart-3', visible: isSuperAdmin, highlight: true },
         { id: 'private', label: 'حصص البرايفت (Private)', icon: 'sparkles', visible: true },
         { id: 'education', label: 'المحتوى التعليمي', icon: 'play-circle', visible: true },
         { id: 'coaches', label: 'المدربون', icon: 'award', visible: true },
@@ -961,6 +1090,7 @@
       const container = document.getElementById('drawerLinksContainer');
       container.innerHTML = items.filter(i => i.visible).map(item => `
         <button class="drawer-link ${appState.currentView === item.id ? 'active' : ''}"
+                style="${item.highlight ? 'background:linear-gradient(135deg, rgba(15,118,110,0.16), rgba(101,163,13,0.16));border-color:rgba(15,118,110,0.35);' : ''}"
                 onclick="toggleDrawer(false); navigate('${item.id}')">
           <span style="display:flex;align-items:center;gap:10px;">
             <i data-lucide="${item.icon}" style="width:18px;height:18px;color:var(--primary);"></i>
@@ -988,7 +1118,7 @@
         if (json.status === 'success') {
           appState.data = json;
           renderCurrentView();
-          if (manual) showToast('تم تحديث البيانات من الشيت بنجاح');
+          if (manual) showToast('تم تحديث البيانات والتحليلات من الشيت بنجاح');
         } else {
           if (!silent) showToast(json.message || 'تعذر تحميل البيانات');
         }
@@ -1093,7 +1223,6 @@
       refreshData(false);
     }
 
-    // Add to Phone Calendar (.ics download / native calendar trigger)
     function downloadSessionICS(title, dateStr, timeStr, locationStr) {
       try {
         const cleanDate = String(dateStr || '').replace(/[^0-9]/g, '');
@@ -1138,7 +1267,6 @@
       }
     }
 
-    // Parent Attendance Confirmation / Apology
     async function confirmAttendance(target, rowIndex, statusText) {
       const u = appState.user || {};
       const playerName = u.players && u.players[0] ? u.players[0]['Player_Name'] : '';
@@ -1173,6 +1301,7 @@
 
       const renderers = {
         home: renderHomeView,
+        dashboard: renderExecutiveDashboardView,
         teams: renderTeamsView,
         players: renderPlayersView,
         schedule: renderScheduleView,
@@ -1192,6 +1321,7 @@
       const { stats, sheets, registrationFormUrl } = appState.data;
       const role = appState.user?.role || 'guest';
       const isGuest = role === 'guest';
+      const isSuperAdmin = role === 'super_admin';
       const isAdmin = ['super_admin', 'admin_staff'].includes(role);
       const todayISO = new Date().toISOString().slice(0, 10);
 
@@ -1199,15 +1329,20 @@
         <div class="hero-card">
           <h2>Next Generation Tennis Academy</h2>
           <p>منصة إدارة ومتابعة تدريبات التنس واللياقة — جميع الجداول والفرق محدثة لحظياً.</p>
-          ${isGuest ? `
-            <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+            ${isSuperAdmin ? `
+              <button class="btn btn-accent btn-sm" onclick="navigate('dashboard')">
+                <i data-lucide="bar-chart-3" style="width:15px;height:15px;"></i> فتح لوحة تحكم المدير العام (التحليلات الشاملة)
+              </button>` : ''}
+            ${isGuest ? `
               <button class="btn btn-glass btn-sm" onclick="openLoginModal()">تسجيل الدخول</button>
               ${registrationFormUrl ? `<a href="${registrationFormUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-accent btn-sm" style="text-decoration:none;">تسجيل لاعب جديد</a>` : ''}
-            </div>` : ''}
+            ` : ''}
+          </div>
         </div>
       `;
 
-      // Highlight Today's Training Session if available
+      // Highlight Today's Training Session
       if (!isGuest) {
         const todaySessions = sheets.schedule.filter(s => String(s['اليوم']).trim() === todayISO);
         const todayPrivate = sheets.private.filter(p => String(p['اليوم']).trim() === todayISO);
@@ -1224,7 +1359,6 @@
         }
       }
 
-      // Super Admin / Admin Quick Dashboard Alerts
       if (isAdmin) {
         html += `
           <div class="stats-grid">
@@ -1286,6 +1420,237 @@
       }
 
       return html;
+    }
+
+    // =========================================================================
+    // SUPER ADMIN EXECUTIVE DASHBOARD (لوحة تحكم المدير العام الشاملة)
+    // =========================================================================
+    function renderExecutiveDashboardView() {
+      const role = appState.user?.role || 'guest';
+      const ea = appState.data?.executiveAnalytics;
+
+      if (role !== 'super_admin' || !ea) {
+        return `
+          <div class="glass-card empty-state">
+            <i data-lucide="shield-alert" style="width:38px;height:38px;color:var(--danger);"></i>
+            <h3 style="margin-top:8px;">صفحة مخصصة للمدير العام فقط</h3>
+            <p>هذه اللوحة التحليلية متاحة حصرياً للإدارة العليا (ADM-01).</p>
+          </div>`;
+      }
+
+      const { period, overview, registrations, subscriptions, attendance, privateAnalytics, teamStats, coachStats } = ea;
+
+      // Growth badges
+      const privTrendUp = privateAnalytics.growthPct >= 0;
+      const regTrendUp = registrations.diffFromLastMonth >= 0;
+
+      // Donut gradient for Subscriptions Collection Rate
+      const subDeg = Math.round((subscriptions.activeCollectionRate / 100) * 360);
+      const subDonutBg = `conic-gradient(#65a30d 0deg ${subDeg}deg, rgba(220,38,38,0.22) ${subDeg}deg 360deg)`;
+
+      // Donut gradient for Attendance Rate
+      const attDeg = Math.round((attendance.attendanceRate / 100) * 360);
+      const attDonutBg = `conic-gradient(#0f766e 0deg ${attDeg}deg, rgba(239,68,68,0.28) ${attDeg}deg 360deg)`;
+
+      return `
+        <!-- Executive Header -->
+        <div class="exec-hero">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <span class="badge" style="background:rgba(255,255,255,0.16);color:#fff;">Executive Dashboard</span>
+            <span style="font-size:11.5px;opacity:0.85;">شهر ${escapeHtml(period.currMonthAr)} (${escapeHtml(period.currYM)})</span>
+          </div>
+          <h2 style="font-size:18px;font-weight:800;">لوحة متابعة أداء الأكاديمية الشاملة</h2>
+          <p style="font-size:12px;opacity:0.88;margin-top:3px;">تحليل لحظي للاشتراكات، الحضور والغياب، نمو البرايفت، وأداء الفرق مقارنة بالشهر الماضي.</p>
+
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:14px;text-align:center;">
+            <div style="background:rgba(255,255,255,0.12);padding:8px 4px;border-radius:12px;">
+              <strong style="font-size:17px;display:block;">${overview.totalPlayers}</strong>
+              <span style="font-size:10.5px;opacity:0.85;">اللاعبين</span>
+            </div>
+            <div style="background:rgba(255,255,255,0.12);padding:8px 4px;border-radius:12px;">
+              <strong style="font-size:17px;display:block;">${overview.totalTeams}</strong>
+              <span style="font-size:10.5px;opacity:0.85;">الفرق</span>
+            </div>
+            <div style="background:rgba(255,255,255,0.12);padding:8px 4px;border-radius:12px;">
+              <strong style="font-size:17px;display:block;">${overview.totalCoaches}</strong>
+              <span style="font-size:10.5px;opacity:0.85;">المدربين</span>
+            </div>
+            <div style="background:rgba(255,255,255,0.12);padding:8px 4px;border-radius:12px;">
+              <strong style="font-size:17px;display:block;">${overview.totalScheduleSessions + overview.totalPrivateSessions}</strong>
+              <span style="font-size:10.5px;opacity:0.85;">إجمالي الحصص</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1. Top 4 KPIs: New Registrations + Private MoM Growth + Paid + Unpaid -->
+        <div class="kpi-grid-2">
+          <!-- New Subscriptions / Registrations -->
+          <div class="kpi-card" onclick="navigate('responses')" style="cursor:pointer;">
+            <div class="kpi-top">
+              <span class="kpi-label">الاشتراكات الجديدة</span>
+              <i data-lucide="user-plus" style="width:16px;height:16px;color:var(--primary);"></i>
+            </div>
+            <div class="kpi-val">${registrations.totalResponses}</div>
+            <div class="kpi-sub" style="color:${registrations.pendingApprovalCount > 0 ? '#b45309' : '#0f766e'};">
+              ${registrations.pendingApprovalCount} بانتظار الاعتماد • (${regTrendUp ? '+' : ''}${registrations.diffFromLastMonth} عن الشهر الماضي)
+            </div>
+          </div>
+
+          <!-- Private Sessions Growth MoM -->
+          <div class="kpi-card" onclick="navigate('private')" style="cursor:pointer;">
+            <div class="kpi-top">
+              <span class="kpi-label">نمو حصص البرايفت</span>
+              <i data-lucide="sparkles" style="width:16px;height:16px;color:#65a30d;"></i>
+            </div>
+            <div class="kpi-val" style="color:${privTrendUp ? '#4d7c0f' : '#dc2626'};">
+              ${privTrendUp ? '+' : ''}${privateAnalytics.growthPct}%
+            </div>
+            <div class="kpi-sub" style="color:var(--text-muted);">
+              هذا الشهر: ${privateAnalytics.currMonthCount} | الماضي: ${privateAnalytics.prevMonthCount}
+            </div>
+          </div>
+
+          <!-- Paid Players in Active Month -->
+          <div class="kpi-card" onclick="navigate('subscriptions')" style="cursor:pointer;">
+            <div class="kpi-top">
+              <span class="kpi-label">مسددون (${escapeHtml(subscriptions.activeMonthName)})</span>
+              <i data-lucide="check-circle-2" style="width:16px;height:16px;color:#65a30d;"></i>
+            </div>
+            <div class="kpi-val" style="color:#4d7c0f;">${subscriptions.activePaidCount} <small style="font-size:12px;color:var(--text-muted);">لاعب</small></div>
+            <div class="kpi-sub" style="color:#4d7c0f;">نسبة التحصيل ${subscriptions.activeCollectionRate}%</div>
+          </div>
+
+          <!-- Unpaid Players in Active Month -->
+          <div class="kpi-card" onclick="navigate('subscriptions')" style="cursor:pointer;">
+            <div class="kpi-top">
+              <span class="kpi-label">غير مسددين (${escapeHtml(subscriptions.activeMonthName)})</span>
+              <i data-lucide="alert-triangle" style="width:16px;height:16px;color:var(--danger);"></i>
+            </div>
+            <div class="kpi-val" style="color:var(--danger);">${subscriptions.activeUnpaidCount} <small style="font-size:12px;color:var(--text-muted);">لاعب</small></div>
+            <div class="kpi-sub" style="color:var(--danger);">إجمالي المتأخرات: ${subscriptions.totalUnpaidAll}</div>
+          </div>
+        </div>
+
+        <!-- 2. Subscriptions Financial & Collection Card -->
+        <div class="section-head">
+          <h3><i data-lucide="wallet" style="width:18px;height:18px;color:var(--primary);"></i> تحليل الاشتراكات والتحصيل الشهري</h3>
+        </div>
+        <div class="glass-card" style="margin-bottom:14px;">
+          <div class="donut-wrap">
+            <div class="donut-ring" style="background:${subDonutBg};">
+              <div class="donut-hole">
+                <span>${subscriptions.activeCollectionRate}%</span>
+                <small style="font-size:9px;color:var(--text-muted);font-weight:600;">تحصيل</small>
+              </div>
+            </div>
+            <div style="flex:1;">
+              <div style="font-size:14px;font-weight:800;margin-bottom:4px;">حالة اشتراكات شهر (${escapeHtml(subscriptions.activeMonthName)})</div>
+              <div style="font-size:12px;color:#4d7c0f;font-weight:700;">✓ دفع الاشتراك: ${subscriptions.activePaidCount} من أصل ${subscriptions.activeTotalCount}</div>
+              <div style="font-size:12px;color:var(--danger);font-weight:700;">✗ لم يدفع بعد: ${subscriptions.activeUnpaidCount} لاعب</div>
+              ${subscriptions.unpaidPlayersList.length > 0 ? `
+                <div style="margin-top:7px;padding:6px 9px;border-radius:10px;background:rgba(220,38,38,0.08);font-size:11.5px;color:#991b1b;">
+                  <strong>أسماء غير المسددين:</strong> ${subscriptions.unpaidPlayersList.map(u => escapeHtml(u.name)).join('، ')}
+                </div>` : ''}
+            </div>
+          </div>
+
+          ${subscriptions.monthsBreakdown.length > 1 ? `
+            <div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(0,0,0,0.06);">
+              <div style="font-size:12px;font-weight:800;margin-bottom:6px;color:var(--text-muted);">مقارنة التحصيل عبر الشهور المسجلة:</div>
+              ${subscriptions.monthsBreakdown.map(m => `
+                <div style="margin-bottom:7px;">
+                  <div style="display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;">
+                    <span>شهر ${escapeHtml(m.month)}</span>
+                    <span>${m.paid}/${m.total} (${m.collectionRate}%)</span>
+                  </div>
+                  <div class="prog-track">
+                    <div class="prog-fill" style="width:${m.collectionRate}%;background:linear-gradient(90deg,#0f766e,#65a30d);"></div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>` : ''}
+        </div>
+
+        <!-- 3. Overall Attendance & Absence Analytics -->
+        <div class="section-head">
+          <h3><i data-lucide="user-check" style="width:18px;height:18px;color:var(--primary);"></i> مؤشر الحضور والغياب العام</h3>
+        </div>
+        <div class="glass-card" style="margin-bottom:14px;">
+          <div class="donut-wrap">
+            <div class="donut-ring" style="background:${attDonutBg};">
+              <div class="donut-hole">
+                <span>${attendance.attendanceRate}%</span>
+                <small style="font-size:9px;color:var(--text-muted);font-weight:600;">حضور</small>
+              </div>
+            </div>
+            <div style="flex:1;">
+              <div style="font-size:14px;font-weight:800;margin-bottom:4px;">ملخص التزام اللاعبين بالتمارين</div>
+              <div style="font-size:12px;color:#0f766e;font-weight:700;">• تأكيدات الحضور: ${attendance.presentCount} (${attendance.attendanceRate}%)</div>
+              <div style="font-size:12px;color:var(--danger);font-weight:700;">• حالات الغياب / الاعتذار: ${attendance.absentCount} (${attendance.absenceRate}%)</div>
+              <div style="font-size:11.5px;color:var(--text-muted);margin-top:3px;">• حصص بانتظار تأكيد الأولياء: ${attendance.unconfirmedSessionsCount} حصة</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Team-by-Team Attendance & MoM Comparison -->
+        <div class="section-head">
+          <h3><i data-lucide="trending-up" style="width:18px;height:18px;color:var(--primary);"></i> أداء الفرق والحضور مقارنة بالشهر الماضي</h3>
+        </div>
+        <div style="margin-bottom:14px;">
+          ${teamStats.map(ts => {
+            const diffPositive = ts.attDiff >= 0;
+            const sessPositive = ts.sessionsDiff >= 0;
+            return `
+              <div class="comp-row">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <div>
+                    <strong style="font-size:14px;">${escapeHtml(ts.teamName)}</strong>
+                    <span style="font-size:11px;color:var(--text-muted);display:block;">المدرب: ${escapeHtml(ts.coach)} • ${ts.playersCount} لاعب</span>
+                  </div>
+                  <span class="badge ${diffPositive ? 'badge-lime' : 'badge-red'}">
+                    ${diffPositive ? '▲' : '▼'} ${Math.abs(ts.attDiff)}% عن الشهر الماضي
+                  </span>
+                </div>
+
+                <div class="prog-track" style="margin-top:8px;">
+                  <div class="prog-fill" style="width:${ts.currAttRate}%;background:${diffPositive ? '#0f766e' : '#d97706'};"></div>
+                </div>
+
+                <div class="comp-grid">
+                  <div class="comp-cell">
+                    <small>حضور الشهر الحالي</small>
+                    <strong style="color:#0f766e;">${ts.currAttRate}%</strong>
+                  </div>
+                  <div class="comp-cell">
+                    <small>حضور الشهر الماضي</small>
+                    <strong>${ts.prevAttRate}%</strong>
+                  </div>
+                  <div class="comp-cell">
+                    <small>الحصص (حالي / ماضي)</small>
+                    <strong style="color:${sessPositive ? '#4d7c0f' : '#b45309'};">${ts.currMonthSessions} / ${ts.prevMonthSessions}</strong>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+
+        <!-- 5. Coach Workload & Efficiency -->
+        <div class="section-head">
+          <h3><i data-lucide="award" style="width:18px;height:18px;color:var(--primary);"></i> توزيع الأحمال التدريبية للمدربين</h3>
+        </div>
+        <div class="glass-card">
+          ${coachStats.map(c => `
+            <div style="padding:9px 0;border-bottom:1px solid rgba(0,0,0,0.05);display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <strong style="font-size:13.5px;">${escapeHtml(c.name)}</strong>
+                <span style="font-size:11px;color:var(--text-muted);display:block;">فرع ${escapeHtml(c.branch)} • جماعي: ${c.groupSessions} | Private: ${c.privateSessions}</span>
+              </div>
+              <span class="badge badge-teal">${c.totalSessions} حصة</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
     }
 
     function renderTeamsView() {
