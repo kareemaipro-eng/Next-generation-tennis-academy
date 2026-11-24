@@ -14,15 +14,14 @@
   <style>
     :root {
       --bg-gradient: linear-gradient(135deg, #f3f9f6 0%, #e7f2f8 48%, #f6f8ec 100%);
-      --glass-bg: rgba(255, 255, 255, 0.66);
-      --glass-bg-strong: rgba(255, 255, 255, 0.84);
-      --glass-border: rgba(255, 255, 255, 0.85);
+      --glass-bg: rgba(255, 255, 255, 0.68);
+      --glass-bg-strong: rgba(255, 255, 255, 0.86);
+      --glass-border: rgba(255, 255, 255, 0.88);
       --glass-shadow: 0 12px 32px rgba(15, 45, 35, 0.07), inset 0 1px 1px rgba(255, 255, 255, 0.95);
       --glass-shadow-sm: 0 6px 18px rgba(15, 45, 35, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.9);
       --primary: #0f766e;
       --primary-light: #14b8a6;
       --accent: #65a30d;
-      --accent-soft: rgba(101, 163, 13, 0.14);
       --text-main: #0f172a;
       --text-muted: #475569;
       --danger: #dc2626;
@@ -40,13 +39,18 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    html, body {
+      overscroll-behavior-y: contain;
+      touch-action: pan-y;
+    }
+
     body {
       background: var(--bg-gradient);
       background-attachment: fixed;
       color: var(--text-main);
       min-height: 100vh;
       overflow-x: hidden;
-      padding-bottom: 105px;
+      padding-bottom: 108px;
       position: relative;
     }
 
@@ -108,6 +112,44 @@
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
+    /* Skeleton Shimmer Loading */
+    .skeleton-card {
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      margin-bottom: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+    .skeleton-line {
+      height: 14px;
+      border-radius: 8px;
+      background: linear-gradient(90deg, rgba(203,213,225,0.35) 25%, rgba(255,255,255,0.85) 50%, rgba(203,213,225,0.35) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      margin-bottom: 10px;
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Pull to refresh indicator */
+    .ptr-indicator {
+      text-align: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary);
+      height: 0;
+      overflow: hidden;
+      transition: height 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
     /* App Container */
     .app-shell {
       max-width: 540px;
@@ -122,7 +164,7 @@
       justify-content: space-between;
       padding: 12px 16px;
       border-radius: var(--radius-xl);
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       position: sticky;
       top: 10px;
       z-index: 40;
@@ -205,8 +247,8 @@
       border-radius: var(--radius-md);
       margin-bottom: 14px;
       font-size: 12.5px;
-      background: rgba(255, 255, 255, 0.55);
-      border: 1px solid rgba(255, 255, 255, 0.85);
+      background: rgba(255, 255, 255, 0.58);
+      border: 1px solid rgba(255, 255, 255, 0.88);
     }
 
     .badge {
@@ -223,11 +265,11 @@
     .badge-amber { background: rgba(245, 158, 11, 0.16); color: #b45309; }
     .badge-red { background: rgba(239, 68, 68, 0.15); color: #b91c1c; }
 
-    /* Hero Card */
+    /* Hero & Today Highlight Card */
     .hero-card {
-      background: linear-gradient(135deg, rgba(15, 118, 110, 0.88), rgba(20, 184, 166, 0.82));
+      background: linear-gradient(135deg, rgba(15, 118, 110, 0.9), rgba(20, 184, 166, 0.84));
       backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.55);
       border-radius: var(--radius-xl);
       padding: 20px;
       color: #fff;
@@ -245,9 +287,46 @@
       background: rgba(255, 255, 255, 0.14);
       top: -40px;
       left: -30px;
+      pointer-events: none;
     }
     .hero-card h2 { font-size: 19px; font-weight: 800; margin-bottom: 4px; }
-    .hero-card p { font-size: 13px; opacity: 0.92; line-height: 1.5; }
+    .hero-card p { font-size: 13px; opacity: 0.94; line-height: 1.5; }
+
+    .today-banner {
+      background: linear-gradient(135deg, rgba(101, 163, 13, 0.16), rgba(20, 184, 166, 0.14));
+      border: 1px solid rgba(101, 163, 13, 0.4);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px;
+      margin-bottom: 14px;
+    }
+
+    /* Filter Pills Row */
+    .filter-row {
+      display: flex;
+      gap: 7px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      margin-bottom: 12px;
+      scrollbar-width: none;
+    }
+    .filter-row::-webkit-scrollbar { display: none; }
+    .filter-chip {
+      padding: 6px 13px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.65);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-chip.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
 
     /* Grid Stats */
     .stats-grid {
@@ -318,7 +397,7 @@
       box-shadow: 0 6px 16px rgba(101, 163, 13, 0.24);
     }
     .btn-glass {
-      background: rgba(255, 255, 255, 0.78);
+      background: rgba(255, 255, 255, 0.82);
       border: 1px solid rgba(255, 255, 255, 0.95);
       color: var(--text-main);
     }
@@ -369,8 +448,8 @@
       color: var(--text-muted);
     }
     .meta-chip {
-      background: rgba(255, 255, 255, 0.72);
-      border: 1px solid rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.74);
+      border: 1px solid rgba(255, 255, 255, 0.92);
       padding: 4px 9px;
       border-radius: 9px;
       display: inline-flex;
@@ -383,10 +462,20 @@
       margin-top: 9px;
       padding: 8px 11px;
       border-radius: 11px;
-      background: rgba(254, 243, 199, 0.55);
+      background: rgba(254, 243, 199, 0.58);
       border: 1px solid rgba(251, 191, 36, 0.35);
       font-size: 12px;
       color: #78350f;
+    }
+
+    .attendance-box {
+      margin-top: 8px;
+      padding: 7px 11px;
+      border-radius: 11px;
+      background: rgba(209, 250, 229, 0.58);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      font-size: 12px;
+      color: #065f46;
     }
 
     .card-actions {
@@ -406,7 +495,7 @@
       transform: translateX(-50%);
       width: calc(100% - 24px);
       max-width: 500px;
-      background: rgba(255, 255, 255, 0.78);
+      background: rgba(255, 255, 255, 0.8);
       backdrop-filter: blur(26px) saturate(200%);
       -webkit-backdrop-filter: blur(26px) saturate(200%);
       border: 1px solid rgba(255, 255, 255, 0.95);
@@ -464,7 +553,7 @@
       left: 12px;
       width: 285px;
       max-width: 82vw;
-      background: rgba(255, 255, 255, 0.88);
+      background: rgba(255, 255, 255, 0.9);
       backdrop-filter: blur(28px) saturate(200%);
       -webkit-backdrop-filter: blur(28px) saturate(200%);
       border: 1px solid #fff;
@@ -488,8 +577,8 @@
       justify-content: space-between;
       padding: 12px 14px;
       border-radius: 15px;
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      background: rgba(255, 255, 255, 0.58);
       color: var(--text-main);
       font-size: 13.5px;
       font-weight: 700;
@@ -522,7 +611,7 @@
       max-width: 440px;
       max-height: 88vh;
       overflow-y: auto;
-      background: rgba(255, 255, 255, 0.92);
+      background: rgba(255, 255, 255, 0.94);
       backdrop-filter: blur(28px);
       border: 1px solid #fff;
       border-radius: 26px;
@@ -543,7 +632,7 @@
       padding: 10px 13px;
       border-radius: 13px;
       border: 1px solid rgba(148, 163, 184, 0.35);
-      background: rgba(255, 255, 255, 0.85);
+      background: rgba(255, 255, 255, 0.88);
       font-size: 13.5px;
       outline: none;
       transition: border-color 0.2s;
@@ -554,7 +643,7 @@
       display: flex;
       gap: 6px;
       margin-bottom: 14px;
-      background: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.55);
       padding: 5px;
       border-radius: 14px;
     }
@@ -587,23 +676,12 @@
       line-height: 1.6;
     }
 
-    .loader {
-      width: 34px;
-      height: 34px;
-      border: 3px solid rgba(15, 118, 110, 0.2);
-      border-top-color: var(--primary);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin: 30px auto;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
     .toast {
       position: fixed;
       top: 18px;
       left: 50%;
       transform: translateX(-50%) translateY(-100px);
-      background: rgba(15, 23, 42, 0.9);
+      background: rgba(15, 23, 42, 0.92);
       color: #fff;
       padding: 10px 18px;
       border-radius: 14px;
@@ -612,6 +690,8 @@
       z-index: 100;
       transition: transform 0.3s ease;
       box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      max-width: 90vw;
+      text-align: center;
     }
     .toast.show { transform: translateX(-50%) translateY(0); }
   </style>
@@ -623,14 +703,20 @@
 
   <div id="toast" class="toast"></div>
 
-  <div class="app-shell">
+  <div class="app-shell" id="appShell">
+    <!-- Pull to refresh indicator -->
+    <div id="ptrIndicator" class="ptr-indicator">
+      <i data-lucide="arrow-down" style="width:14px;height:14px;"></i>
+      <span>اسحب للتحديث الفوري</span>
+    </div>
+
     <!-- Top Header -->
     <header class="top-bar glass">
       <div class="brand">
         <div class="brand-logo">NXT</div>
         <div class="brand-text">
           <h1>Next Generation</h1>
-          <span><i class="sync-dot"></i> تحديث تلقائي متصل بالشيت</span>
+          <span><i class="sync-dot"></i> متصل ومزامن تلقائياً</span>
         </div>
       </div>
       <div class="header-actions">
@@ -651,9 +737,7 @@
     </div>
 
     <!-- Main Dynamic View Container -->
-    <main id="mainContent">
-      <div class="loader"></div>
-    </main>
+    <main id="mainContent"></main>
   </div>
 
   <!-- Bottom Navigation Bar (5 Icons) -->
@@ -730,6 +814,8 @@
         يدخل ولي الأمر بالبريد الإلكتروني المسجل في شيت اللاعبين مباشرة بدون كود.
       </p>
 
+      <div id="pendingAlertBox" style="display:none;margin-bottom:12px;padding:12px;border-radius:14px;background:rgba(245,158,11,0.14);border:1px solid rgba(245,158,11,0.4);font-size:12.5px;color:#92400e;line-height:1.6;"></div>
+
       <button class="btn btn-primary btn-block" onclick="submitLogin()">دخول</button>
 
       <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(0,0,0,0.07);text-align:center;">
@@ -756,11 +842,13 @@
     // =========================================================================
     // ضع هنا رابط النشر (Web App URL) الخاص بكود Google Apps Script
     // =========================================================================
-    const API_URL = 'https://script.google.com/macros/s/AKfycbxu25ziAU4Mkk7Fn_8ejg35SkuqLRJkQvoKhe7Mtgs3FqEpjMctbmAQq2xC064w8lU4Qw/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbw3-iYGotn4n0GX6n1HjaGhMdQgK1-la4kBZCkD31fFZMNHBdLxexCf6VUKBWXQ2f05/exec';
 
     let appState = {
       currentView: 'home',
       loginMode: 'parent',
+      scheduleFilter: 'all', // 'all' | 'upcoming' | 'past'
+      eduFilter: 'all',
       user: JSON.parse(localStorage.getItem('nxtgen_user') || 'null'),
       data: null,
       autoSyncTimer: null
@@ -776,17 +864,55 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
+      setupPullToRefresh();
       updateAuthUI();
       refreshData(false);
       // Auto-sync every 20 seconds so any change in Google Sheet reflects automatically
       appState.autoSyncTimer = setInterval(() => refreshData(false, true), 20000);
     });
 
+    // Pull-to-refresh gesture for mobile WebView
+    function setupPullToRefresh() {
+      let startY = 0;
+      const ptr = document.getElementById('ptrIndicator');
+      window.addEventListener('touchstart', e => {
+        if (window.scrollY === 0) startY = e.touches[0].clientY;
+      }, { passive: true });
+      window.addEventListener('touchmove', e => {
+        if (window.scrollY === 0 && startY > 0) {
+          const diff = e.touches[0].clientY - startY;
+          if (diff > 20 && diff < 120) {
+            ptr.style.height = Math.min(diff * 0.45, 38) + 'px';
+          }
+        }
+      }, { passive: true });
+      window.addEventListener('touchend', () => {
+        if (parseInt(ptr.style.height || '0') >= 32) {
+          refreshData(true);
+        }
+        ptr.style.height = '0px';
+        startY = 0;
+      });
+    }
+
+    function renderSkeletons(count = 3) {
+      let html = '';
+      for (let i = 0; i < count; i++) {
+        html += `
+          <div class="skeleton-card">
+            <div class="skeleton-line" style="width:55%;height:16px;"></div>
+            <div class="skeleton-line" style="width:85%;"></div>
+            <div class="skeleton-line" style="width:40%;margin-bottom:0;"></div>
+          </div>`;
+      }
+      return html;
+    }
+
     function showToast(msg) {
       const el = document.getElementById('toast');
       el.textContent = msg;
       el.classList.add('show');
-      setTimeout(() => el.classList.remove('show'), 3400);
+      setTimeout(() => el.classList.remove('show'), 3600);
     }
 
     function updateAuthUI() {
@@ -848,7 +974,7 @@
 
     async function refreshData(manual = false, silent = false) {
       if (!silent) {
-        document.getElementById('mainContent').innerHTML = '<div class="loader"></div>';
+        document.getElementById('mainContent').innerHTML = renderSkeletons(3);
       }
       try {
         const u = appState.user || {};
@@ -896,6 +1022,7 @@
     }
 
     function openLoginModal() {
+      document.getElementById('pendingAlertBox').style.display = 'none';
       document.getElementById('loginModal').classList.add('open');
     }
 
@@ -905,6 +1032,7 @@
 
     function setLoginMode(mode) {
       appState.loginMode = mode;
+      document.getElementById('pendingAlertBox').style.display = 'none';
       document.getElementById('tabParent').classList.toggle('active', mode === 'parent');
       document.getElementById('tabStaff').classList.toggle('active', mode === 'staff');
       document.getElementById('loginCodeGroup').style.display = mode === 'staff' ? 'block' : 'none';
@@ -916,6 +1044,8 @@
     async function submitLogin() {
       const email = document.getElementById('loginEmail').value.trim();
       const code = document.getElementById('loginCode').value.trim();
+      const pendingBox = document.getElementById('pendingAlertBox');
+      pendingBox.style.display = 'none';
 
       if (!email) {
         showToast('يرجى إدخال البريد الإلكتروني');
@@ -943,8 +1073,9 @@
           showToast(`مرحباً بك ${json.user.name}`);
           refreshData(false);
         } else if (json.status === 'pending') {
-          closeModal('loginModal');
-          alert(json.message);
+          pendingBox.innerHTML = `<strong><i data-lucide="hourglass" style="width:14px;height:14px;vertical-align:middle;"></i> طلبك قيد التفعيل:</strong><br>${escapeHtml(json.message)}`;
+          pendingBox.style.display = 'block';
+          lucide.createIcons();
         } else {
           showToast(json.message || 'بيانات الدخول غير صحيحة');
         }
@@ -960,6 +1091,76 @@
       showToast('تم تسجيل الخروج');
       navigate('home');
       refreshData(false);
+    }
+
+    // Add to Phone Calendar (.ics download / native calendar trigger)
+    function downloadSessionICS(title, dateStr, timeStr, locationStr) {
+      try {
+        const cleanDate = String(dateStr || '').replace(/[^0-9]/g, '');
+        const cleanTime = String(timeStr || '17:00:00').replace(/[^0-9]/g, '').padEnd(6, '0').slice(0, 6);
+        if (cleanDate.length !== 8) {
+          showToast('صيغة التاريخ غير مكتملة لإضافتها للتقويم');
+          return;
+        }
+        const startDT = `${cleanDate}T${cleanTime}`;
+        const endHour = String(Math.min(23, parseInt(cleanTime.slice(0, 2), 10) + 1)).padStart(2, '0');
+        const endDT = `${cleanDate}T${endHour}${cleanTime.slice(2)}`;
+
+        const icsContent = [
+          'BEGIN:VCALENDAR',
+          'VERSION:2.0',
+          'PRODID:-//Next Generation Tennis Academy//AR',
+          'BEGIN:VEVENT',
+          `DTSTART:${startDT}`,
+          `DTEND:${endDT}`,
+          `SUMMARY:${title} - NXT Gen Tennis`,
+          `LOCATION:${locationStr}`,
+          'DESCRIPTION:موعد تمرين أكاديمية Next Generation Tennis Academy',
+          'BEGIN:VALARM',
+          'TRIGGER:-PT60M',
+          'ACTION:DISPLAY',
+          'DESCRIPTION:تذكير بموعد التمرين بعد ساعة',
+          'END:VALARM',
+          'END:VEVENT',
+          'END:VCALENDAR'
+        ].join('\r\n');
+
+        const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `NXT_Gen_${cleanDate}.ics`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        showToast('تم تجهيز ملف التقويم بالتذكير التلقائي');
+      } catch (e) {
+        showToast('تعذر إنشاء حدث التقويم');
+      }
+    }
+
+    // Parent Attendance Confirmation / Apology
+    async function confirmAttendance(target, rowIndex, statusText) {
+      const u = appState.user || {};
+      const playerName = u.players && u.players[0] ? u.players[0]['Player_Name'] : '';
+      try {
+        showToast('جاري إرسال ردك للمدرب...');
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'attendance',
+            authEmail: u.email || '',
+            target,
+            rowIndex,
+            statusText,
+            playerName
+          })
+        });
+        const json = await res.json();
+        showToast(json.message || 'تم التسجيل');
+        if (json.status === 'success') refreshData(false, true);
+      } catch (e) {
+        showToast('تعذر إرسال الحالة');
+      }
     }
 
     // =========================================================================
@@ -991,18 +1192,54 @@
       const { stats, sheets, registrationFormUrl } = appState.data;
       const role = appState.user?.role || 'guest';
       const isGuest = role === 'guest';
+      const isAdmin = ['super_admin', 'admin_staff'].includes(role);
+      const todayISO = new Date().toISOString().slice(0, 10);
 
-      let quickCards = `
+      let html = `
         <div class="hero-card">
           <h2>Next Generation Tennis Academy</h2>
           <p>منصة إدارة ومتابعة تدريبات التنس واللياقة — جميع الجداول والفرق محدثة لحظياً.</p>
           ${isGuest ? `
             <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
               <button class="btn btn-glass btn-sm" onclick="openLoginModal()">تسجيل الدخول</button>
-              ${registrationFormUrl ? `<a href="${registrationFormUrl}" target="_blank" class="btn btn-accent btn-sm" style="text-decoration:none;">تسجيل لاعب جديد</a>` : ''}
+              ${registrationFormUrl ? `<a href="${registrationFormUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-accent btn-sm" style="text-decoration:none;">تسجيل لاعب جديد</a>` : ''}
             </div>` : ''}
         </div>
+      `;
 
+      // Highlight Today's Training Session if available
+      if (!isGuest) {
+        const todaySessions = sheets.schedule.filter(s => String(s['اليوم']).trim() === todayISO);
+        const todayPrivate = sheets.private.filter(p => String(p['اليوم']).trim() === todayISO);
+        if (todaySessions.length > 0 || todayPrivate.length > 0) {
+          html += `
+            <div class="today-banner">
+              <div style="display:flex;align-items:center;gap:7px;font-weight:800;color:#365314;margin-bottom:6px;">
+                <i data-lucide="bell-ring" style="width:17px;height:17px;"></i>
+                <span>تمرين اليوم (${todayISO})</span>
+              </div>
+              ${todaySessions.map(s => `<div style="font-size:13px;font-weight:700;">• ${escapeHtml(s['عنوان التمرين / الحصة'])} — الساعة ${escapeHtml(s['التوقيت'])} (${escapeHtml(s['الملعب'])})</div>`).join('')}
+              ${todayPrivate.map(p => `<div style="font-size:13px;font-weight:700;">• حصة Private (${escapeHtml(p['اسم اللاعب'])}) — الساعة ${escapeHtml(p['التوقيت'])} (${escapeHtml(p['الملعب'])})</div>`).join('')}
+            </div>`;
+        }
+      }
+
+      // Super Admin / Admin Quick Dashboard Alerts
+      if (isAdmin) {
+        html += `
+          <div class="stats-grid">
+            <div class="stat-box glass-card" onclick="navigate('subscriptions')" style="cursor:pointer;">
+              <div class="stat-icon" style="background:rgba(220,38,38,0.12);color:var(--danger);"><i data-lucide="alert-circle"></i></div>
+              <div class="stat-info"><h3>${stats.unpaidCount}</h3><span>اشتراكات غير مسددة</span></div>
+            </div>
+            <div class="stat-box glass-card" onclick="navigate('responses')" style="cursor:pointer;">
+              <div class="stat-icon" style="background:rgba(101,163,13,0.16);color:#4d7c0f;"><i data-lucide="user-plus"></i></div>
+              <div class="stat-info"><h3>${stats.pendingResponsesCount}</h3><span>طلبات تسجيل جديدة</span></div>
+            </div>
+          </div>`;
+      }
+
+      html += `
         <div class="stats-grid">
           <div class="stat-box glass-card" onclick="navigate('teams')" style="cursor:pointer;">
             <div class="stat-icon"><i data-lucide="shield"></i></div>
@@ -1016,17 +1253,16 @@
             <div class="stat-icon"><i data-lucide="play-circle"></i></div>
             <div class="stat-info"><h3>${stats.eduCount}</h3><span>المحتوى التعليمي</span></div>
           </div>
-          <div class="stat-box glass-card" onclick="navigate('${isGuest ? 'admin' : 'schedule'}')" style="cursor:pointer;">
-            <div class="stat-icon"><i data-lucide="${isGuest ? 'building-2' : 'calendar'}"></i></div>
-            <div class="stat-info"><h3>${isGuest ? 'تواصل' : stats.sessionsCount}</h3><span>${isGuest ? 'الإدارة والتسجيل' : 'الحصص المتاحة'}</span></div>
+          <div class="stat-box glass-card" onclick="navigate('${isGuest ? 'admin' : 'private'}')" style="cursor:pointer;">
+            <div class="stat-icon"><i data-lucide="${isGuest ? 'building-2' : 'sparkles'}"></i></div>
+            <div class="stat-info"><h3>${isGuest ? 'تواصل' : stats.privateCount}</h3><span>${isGuest ? 'الإدارة والتسجيل' : 'حصص البرايفت'}</span></div>
           </div>
         </div>
       `;
 
-      // Highlight next schedule for logged-in users
       if (!isGuest && sheets.schedule.length > 0) {
         const nextSessions = sheets.schedule.slice(0, 3);
-        quickCards += `
+        html += `
           <div class="section-head">
             <h3><i data-lucide="clock" style="width:18px;height:18px;color:var(--primary);"></i> أقرب مواعيد التمارين</h3>
             <button class="btn btn-glass btn-sm" onclick="navigate('schedule')">عرض الكل</button>
@@ -1049,7 +1285,7 @@
         `;
       }
 
-      return quickCards;
+      return html;
     }
 
     function renderTeamsView() {
@@ -1157,6 +1393,11 @@
       `;
     }
 
+    function setScheduleFilter(val) {
+      appState.scheduleFilter = val;
+      renderCurrentView();
+    }
+
     function renderScheduleView() {
       const role = appState.user?.role || 'guest';
       if (role === 'guest') {
@@ -1169,17 +1410,33 @@
           </div>`;
       }
 
-      const schedule = appState.data.sheets.schedule || [];
+      const rawSchedule = appState.data.sheets.schedule || [];
+      const todayISO = new Date().toISOString().slice(0, 10);
+      const schedule = rawSchedule.filter(s => {
+        const d = String(s['اليوم'] || '').trim();
+        if (appState.scheduleFilter === 'upcoming') return d >= todayISO;
+        if (appState.scheduleFilter === 'past') return d < todayISO;
+        return true;
+      });
+
       const isAdmin = ['super_admin', 'admin_staff'].includes(role);
       const isCoach = role === 'coach';
+      const isParent = role === 'parent';
 
       return `
         <div class="section-head">
           <h3><i data-lucide="calendar" style="width:19px;height:19px;color:var(--primary);"></i> جدول المواعيد والتمارين</h3>
           ${isAdmin ? `<button class="btn btn-primary btn-sm" onclick="openAddScheduleModal()"><i data-lucide="plus" style="width:15px;height:15px;"></i> إضافة موعد</button>` : ''}
         </div>
+
+        <div class="filter-row">
+          <button class="filter-chip ${appState.scheduleFilter === 'all' ? 'active' : ''}" onclick="setScheduleFilter('all')">الكل (${rawSchedule.length})</button>
+          <button class="filter-chip ${appState.scheduleFilter === 'upcoming' ? 'active' : ''}" onclick="setScheduleFilter('upcoming')">القادمة</button>
+          <button class="filter-chip ${appState.scheduleFilter === 'past' ? 'active' : ''}" onclick="setScheduleFilter('past')">السابقة</button>
+        </div>
+
         <div class="cards-stack">
-          ${schedule.length === 0 ? `<div class="glass-card empty-state"><p>لا توجد مواعيد تمارين مسجلة حالياً.</p></div>` : ''}
+          ${schedule.length === 0 ? `<div class="glass-card empty-state"><p>لا توجد مواعيد مطابقة للفلتر المحدد.</p></div>` : ''}
           ${schedule.map(s => `
             <div class="glass-card">
               <div style="display:flex;justify-content:space-between;align-items:start;gap:8px;">
@@ -1196,11 +1453,21 @@
                 <span class="meta-chip"><i data-lucide="user" style="width:13px;height:13px;"></i> ${escapeHtml(s['المدرب المسؤول'])}</span>
               </div>
               ${s['ملاحظات'] ? `<div class="note-box"><strong>ملاحظات التمرين:</strong> ${escapeHtml(s['ملاحظات'])}</div>` : ''}
-              ${(isAdmin || isCoach) ? `
-                <div class="card-actions">
+              ${s['حالة_الحضور'] ? `<div class="attendance-box"><strong>حالة الحضور:</strong> ${escapeHtml(s['حالة_الحضور'])}</div>` : ''}
+
+              <div class="card-actions">
+                <button class="btn btn-glass btn-sm" onclick="downloadSessionICS('${escapeHtml(s['عنوان التمرين / الحصة'])}', '${escapeHtml(s['اليوم'])}', '${escapeHtml(s['التوقيت'])}', '${escapeHtml(s['الملعب'])}')">
+                  <i data-lucide="calendar-plus" style="width:13px;height:13px;"></i> للتقويم
+                </button>
+                ${isParent ? `
+                  <button class="btn btn-accent btn-sm" onclick="confirmAttendance('schedule', ${s._rowIndex}, 'سيحضر ✓')">تأكيد الحضور</button>
+                  <button class="btn btn-danger btn-sm" onclick="confirmAttendance('schedule', ${s._rowIndex}, 'اعتذار ✗')">اعتذار</button>
+                ` : ''}
+                ${(isAdmin || isCoach) ? `
                   <button class="btn btn-glass btn-sm" onclick='openEditScheduleModal(${JSON.stringify(s)})'>تعديل / ملاحظات</button>
                   <button class="btn btn-danger btn-sm" onclick="deleteRow('schedule', ${s._rowIndex})">إلغاء الموعد</button>
-                </div>` : ''}
+                ` : ''}
+              </div>
             </div>
           `).join('')}
         </div>
@@ -1221,6 +1488,7 @@
 
       const list = appState.data.sheets.private || [];
       const canManage = ['super_admin', 'admin_staff', 'coach'].includes(role);
+      const isParent = role === 'parent';
 
       return `
         <div class="section-head">
@@ -1228,7 +1496,7 @@
           ${canManage ? `<button class="btn btn-accent btn-sm" onclick="openAddPrivateModal()"><i data-lucide="plus" style="width:15px;height:15px;"></i> إضافة حصة Private</button>` : ''}
         </div>
         <div class="cards-stack">
-          ${list.length === 0 ? `<div class="glass-card empty-state"><p>${role === 'parent' ? 'لا توجد حصص Private مسجلة لابنك حالياً.' : 'لا توجد حصص Private مسجلة.'}</p></div>` : ''}
+          ${list.length === 0 ? `<div class="glass-card empty-state"><p>${isParent ? 'لا توجد حصص Private مسجلة لابنك حالياً.' : 'لا توجد حصص Private مسجلة.'}</p></div>` : ''}
           ${list.map(pr => `
             <div class="glass-card">
               <div style="display:flex;justify-content:space-between;align-items:center;">
@@ -1241,19 +1509,39 @@
                 <span class="meta-chip"><i data-lucide="map-pin" style="width:13px;height:13px;"></i> ${escapeHtml(pr['الملعب'])}</span>
                 <span class="meta-chip"><i data-lucide="award" style="width:13px;height:13px;"></i> ${escapeHtml(pr['المدرب المسؤول'])}</span>
               </div>
-              ${canManage ? `
-                <div class="card-actions">
+              ${pr['حالة_الحضور'] ? `<div class="attendance-box"><strong>تأكيد ولي الأمر:</strong> ${escapeHtml(pr['حالة_الحضور'])}</div>` : ''}
+
+              <div class="card-actions">
+                <button class="btn btn-glass btn-sm" onclick="downloadSessionICS('حصة Private - ${escapeHtml(pr['اسم اللاعب'])}', '${escapeHtml(pr['اليوم'])}', '${escapeHtml(pr['التوقيت'])}', '${escapeHtml(pr['الملعب'])}')">
+                  <i data-lucide="calendar-plus" style="width:13px;height:13px;"></i> للتقويم
+                </button>
+                ${isParent ? `
+                  <button class="btn btn-accent btn-sm" onclick="confirmAttendance('private', ${pr._rowIndex}, 'مؤكد ✓')">تأكيد الموعد</button>
+                  <button class="btn btn-danger btn-sm" onclick="confirmAttendance('private', ${pr._rowIndex}, 'طلب تأجيل ✗')">اعتذار</button>
+                ` : ''}
+                ${canManage ? `
                   <button class="btn btn-glass btn-sm" onclick='openEditPrivateModal(${JSON.stringify(pr)})'>تعديل الموعد</button>
                   <button class="btn btn-danger btn-sm" onclick="deleteRow('private', ${pr._rowIndex})">إلغاء الحصة</button>
-                </div>` : ''}
+                ` : ''}
+              </div>
             </div>
           `).join('')}
         </div>
       `;
     }
 
+    function setEduFilter(cat) {
+      appState.eduFilter = cat;
+      renderCurrentView();
+    }
+
     function renderEducationView() {
-      const edu = appState.data.sheets.education || [];
+      const rawEdu = appState.data.sheets.education || [];
+      const categories = ['all', ...new Set(rawEdu.map(e => String(e['نوع الرياضة / التصنيف'] || '').trim()).filter(Boolean))];
+      const edu = appState.eduFilter === 'all'
+        ? rawEdu
+        : rawEdu.filter(e => String(e['نوع الرياضة / التصنيف'] || '').trim() === appState.eduFilter);
+
       const isAdmin = ['super_admin', 'admin_staff'].includes(appState.user?.role);
 
       return `
@@ -1261,6 +1549,15 @@
           <h3><i data-lucide="play-circle" style="width:19px;height:19px;color:var(--primary);"></i> المحتوى التعليمي والتدريبي</h3>
           ${isAdmin ? `<button class="btn btn-primary btn-sm" onclick="openAddEduModal()"><i data-lucide="plus" style="width:15px;height:15px;"></i> إضافة درس</button>` : ''}
         </div>
+
+        <div class="filter-row">
+          ${categories.map(cat => `
+            <button class="filter-chip ${appState.eduFilter === cat ? 'active' : ''}" onclick="setEduFilter('${escapeHtml(cat)}')">
+              ${cat === 'all' ? 'الكل' : escapeHtml(cat)}
+            </button>
+          `).join('')}
+        </div>
+
         <div class="cards-stack">
           ${edu.map(item => `
             <div class="glass-card">
@@ -1274,7 +1571,7 @@
                 <span class="meta-chip">الفئة: ${escapeHtml(item['الفئة المستهدفة'])}</span>
               </div>
               <div class="card-actions">
-                ${item['رابط المادة'] ? `<a href="${escapeHtml(item['رابط المادة'])}" target="_blank" class="btn btn-primary btn-sm" style="text-decoration:none;"><i data-lucide="external-link" style="width:13px;height:13px;"></i> فتح المادة التعليمية</a>` : ''}
+                ${item['رابط المادة'] ? `<a href="${escapeHtml(item['رابط المادة'])}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm" style="text-decoration:none;"><i data-lucide="external-link" style="width:13px;height:13px;"></i> فتح المادة التعليمية</a>` : ''}
                 ${isAdmin ? `<button class="btn btn-danger btn-sm" onclick="deleteRow('education', ${item._rowIndex})">حذف</button>` : ''}
               </div>
             </div>
@@ -1365,8 +1662,7 @@
           <h3><i data-lucide="building-2" style="width:19px;height:19px;color:var(--primary);"></i> إدارة الأكاديمية والتسجيل</h3>
         </div>
 
-        <!-- New Player Registration Card inside Admin Page as requested -->
-        <div class="glass-card" style="margin-bottom:14px;background:linear-gradient(135deg, rgba(255,255,255,0.85), rgba(209,250,229,0.7));">
+        <div class="glass-card" style="margin-bottom:14px;background:linear-gradient(135deg, rgba(255,255,255,0.88), rgba(209,250,229,0.72));">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
             <div class="stat-icon" style="background:rgba(101,163,13,0.18);color:#4d7c0f;"><i data-lucide="user-plus"></i></div>
             <div>
@@ -1378,7 +1674,7 @@
             للمستخدمين الجدد: يرجى تعبئة استمارة التسجيل الرسمية بالبيانات الصحيحة وبريد ولي الأمر الإلكتروني، وسيتم إدراج اللاعب وتفعيل الدخول خلال 24 ساعة.
           </p>
           ${formUrl ? `
-            <a href="${escapeHtml(formUrl)}" target="_blank" class="btn btn-accent btn-block" style="text-decoration:none;">
+            <a href="${escapeHtml(formUrl)}" target="_blank" rel="noopener noreferrer" class="btn btn-accent btn-block" style="text-decoration:none;">
               <i data-lucide="file-text" style="width:16px;height:16px;"></i> فتح استمارة تسجيل لاعب جديد (Google Form)
             </a>` : ''}
         </div>
@@ -1443,6 +1739,7 @@
         <div class="form-group">
           <label>${f.label}</label>
           <input type="${f.type || 'text'}" name="${f.name}" value="${escapeHtml(f.value || '')}"
+                 placeholder="${escapeHtml(f.placeholder || '')}"
                  class="form-control" ${f.required ? 'required' : ''} ${f.readonly ? 'readonly' : ''} />
         </div>
       `).join('') + `<button type="submit" class="btn btn-primary btn-block" style="margin-top:8px;">حفظ التعديلات في الشيت</button>`;
@@ -1492,7 +1789,6 @@
       sendWriteRequest({ op: 'delete', target, rowIndex });
     }
 
-    // Specific Modals
     function openAddTeamModal() {
       openCrudForm('إضافة فريق جديد', [
         { name: 'معرف الفريق', label: 'معرف الفريق (مثال: Blue 1)', required: true },
@@ -1518,7 +1814,7 @@
     function openAddPlayerModal() {
       const isSuperAdmin = appState.user?.role === 'super_admin';
       const fields = [
-        { name: 'Player_ID', label: 'كود اللاعب (مثال: P04)', required: true },
+        { name: 'Player_ID', label: 'كود اللاعب (يتم توليده تلقائياً)', value: 'تلقائي', readonly: true },
         { name: 'Player_Name', label: 'اسم اللاعب', required: true },
         { name: 'Team_ID', label: 'كود الفريق (مثال: Green 1)', required: true },
         { name: 'Parent_Name', label: 'اسم ولي الأمر', required: true },
@@ -1554,7 +1850,7 @@
 
     function openAddScheduleModal() {
       openCrudForm('إضافة موعد تمرين جديد', [
-        { name: 'معرف الحصة', label: 'معرف الحصة (مثال: SCH-14)', required: true },
+        { name: 'معرف الحصة', label: 'معرف الحصة (يتم توليده تلقائياً)', value: 'تلقائي', readonly: true },
         { name: 'معرف الفريق', label: 'معرف الفريق (مثال: Green 1)', required: true },
         { name: 'عنوان التمرين / الحصة', label: 'عنوان التمرين', required: true },
         { name: 'اليوم', label: 'التاريخ (YYYY-MM-DD)', type: 'date', required: true },
@@ -1567,6 +1863,7 @@
 
     function openEditScheduleModal(s) {
       openCrudForm('تعديل موعد التمرين / إضافة ملاحظة', [
+        { name: 'معرف الفريق', label: 'معرف الفريق', value: s['معرف الفريق'], readonly: true },
         { name: 'عنوان التمرين / الحصة', label: 'عنوان التمرين', value: s['عنوان التمرين / الحصة'], required: true },
         { name: 'اليوم', label: 'التاريخ', value: s['اليوم'], required: true },
         { name: 'التوقيت', label: 'التوقيت', value: s['التوقيت'], required: true },
@@ -1578,8 +1875,8 @@
 
     function openAddPrivateModal() {
       const coachName = appState.user?.role === 'coach' ? appState.user.name : '';
-      openCrudForm('إضافة حصة Private بعد التنسيق مع ولي الأمر', [
-        { name: 'معرف الحصة', label: 'معرف الحصة (مثال: prv-014)', required: true },
+      openCrudForm('إضافة حصة Private (مع إشعار تلقائي لولي الأمر)', [
+        { name: 'معرف الحصة', label: 'معرف الحصة (يتم توليده تلقائياً)', value: 'تلقائي', readonly: true },
         { name: 'معرف الفريق', label: 'الفريق (مثال: Green 1)', required: true },
         { name: 'اسم اللاعب', label: 'اسم اللاعب (مطابق لاسم اللاعب في الشيت)', required: true },
         { name: 'اليوم', label: 'التاريخ', type: 'date', required: true },
@@ -1602,7 +1899,7 @@
     function openAddCoachModal() {
       const isSuperAdmin = appState.user?.role === 'super_admin';
       const fields = [
-        { name: 'كود المدرب', label: 'كود المدرب (مثال: C005)', required: true },
+        { name: 'كود المدرب', label: 'كود المدرب (يتم توليده تلقائياً)', value: 'تلقائي', readonly: true },
         { name: 'اسم المدرب', label: 'اسم المدرب', required: true },
         { name: 'رقم المدرب', label: 'رقم هاتف المدرب', required: true },
         { name: 'الفرع', label: 'الفرع', value: 'Qatameya', required: true }
@@ -1634,7 +1931,7 @@
 
     function openAddEduModal() {
       openCrudForm('إضافة محتوى تعليمي جديد', [
-        { name: 'معرف المحتوى', label: 'معرف المحتوى (مثال: EDU-104)', required: true },
+        { name: 'معرف المحتوى', label: 'معرف المحتوى (تلقائي)', value: 'تلقائي', readonly: true },
         { name: 'عنوان الدرس', label: 'عنوان الدرس', required: true },
         { name: 'نوع الرياضة / التصنيف', label: 'التصنيف (تنس / بادل / لياقة)', required: true },
         { name: 'نوع الوسائط', label: 'نوع الوسائط (فيديو / مقال)', required: true },
