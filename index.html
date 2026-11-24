@@ -1146,11 +1146,10 @@
 
         let json;
         try {
+          json = await requestJsonp(url.toString());
+        } catch (jsonpErr) {
           const res = await fetch(url.toString(), { cache: 'no-store' });
           json = await res.json();
-        } catch (fetchErr) {
-          // Fallback to JSONP if CORS/WebView blocks direct fetch response
-          json = await requestJsonp(url.toString());
         }
         if (json.status === 'success') {
           appState.data = json;
@@ -1242,11 +1241,10 @@
 
         let json;
         try {
+          json = await requestJsonp(url.toString());
+        } catch (jsonpErr) {
           const res = await fetch(url.toString(), { cache: 'no-store' });
           json = await res.json();
-        } catch (fetchErr) {
-          // Fallback to JSONP if CORS/WebView blocks direct fetch response
-          json = await requestJsonp(url.toString());
         }
 
         if (json.status === 'success') {
