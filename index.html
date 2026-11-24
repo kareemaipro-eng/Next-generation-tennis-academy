@@ -1102,6 +1102,37 @@
       lucide.createIcons();
     }
 
+    function requestJsonp(baseUrl) {
+      return new Promise((resolve, reject) => {
+        const cbName = 'nxtgen_cb_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+        const script = document.createElement('script');
+        const timeout = setTimeout(() => {
+          cleanup();
+          reject(new Error('انتهت مهلة الاتصال بالخادم (Timeout)'));
+        }, 12000);
+
+        function cleanup() {
+          clearTimeout(timeout);
+          if (script.parentNode) script.parentNode.removeChild(script);
+          try { delete window[cbName]; } catch (e) { window[cbName] = undefined; }
+        }
+
+        window[cbName] = function(data) {
+          cleanup();
+          resolve(data);
+        };
+
+        script.onerror = function() {
+          cleanup();
+          reject(new Error('فشل تحميل السكربت من Google Apps Script'));
+        };
+
+        const sep = baseUrl.includes('?') ? '&' : '?';
+        script.src = baseUrl + sep + 'callback=' + cbName;
+        document.body.appendChild(script);
+      });
+    }
+
     async function refreshData(manual = false, silent = false) {
       if (!silent) {
         document.getElementById('mainContent').innerHTML = renderSkeletons(3);
@@ -1113,8 +1144,14 @@
         if (u.email) url.searchParams.set('authEmail', u.email);
         if (u.code) url.searchParams.set('authCode', u.code);
 
-        const res = await fetch(url.toString());
-        const json = await res.json();
+        let json;
+        try {
+          const res = await fetch(url.toString(), { cache: 'no-store' });
+          json = await res.json();
+        } catch (fetchErr) {
+          // Fallback to JSONP if CORS/WebView blocks direct fetch response
+          json = await requestJsonp(url.toString());
+        }
         if (json.status === 'success') {
           appState.data = json;
           renderCurrentView();
@@ -1203,8 +1240,14 @@
         url.searchParams.set('email', email);
         if (code) url.searchParams.set('code', code);
 
-        const res = await fetch(url.toString());
-        const json = await res.json();
+        let json;
+        try {
+          const res = await fetch(url.toString(), { cache: 'no-store' });
+          json = await res.json();
+        } catch (fetchErr) {
+          // Fallback to JSONP if CORS/WebView blocks direct fetch response
+          json = await requestJsonp(url.toString());
+        }
 
         if (json.status === 'success') {
           appState.user = { ...json.user, code: code };
