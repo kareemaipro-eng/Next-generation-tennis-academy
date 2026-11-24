@@ -1120,7 +1120,17 @@
           renderCurrentView();
           if (manual) showToast('تم تحديث البيانات والتحليلات من الشيت بنجاح');
         } else {
-          if (!silent) showToast(json.message || 'تعذر تحميل البيانات');
+          if (!silent) {
+            showToast(json.message || 'تعذر تحميل البيانات');
+            document.getElementById('mainContent').innerHTML = `
+              <div class="glass-card empty-state">
+                <i data-lucide="alert-circle" style="width:36px;height:36px;color:var(--danger);"></i>
+                <h3 style="margin-top:8px;">تنبيه من السيرفر</h3>
+                <p>${escapeHtml(json.message || 'تعذر تحميل البيانات من الشيت')}</p>
+                <button class="btn btn-primary" style="margin-top:12px;" onclick="refreshData(true)">إعادة المحاولة</button>
+              </div>`;
+            lucide.createIcons();
+          }
         }
       } catch (err) {
         if (!silent) {
@@ -1128,7 +1138,8 @@
             <div class="glass-card empty-state">
               <i data-lucide="wifi-off" style="width:36px;height:36px;color:var(--danger);"></i>
               <h3 style="margin-top:8px;">تعذر الاتصال بقاعدة البيانات</h3>
-              <p>تأكد من ربط رابط Google Apps Script بشكل صحيح ومن توفر اتصال بالإنترنت.</p>
+              <p>تأكد من نشر Google Apps Script كـ Web App بصلاحية <strong>Anyone</strong> ونسخ الرابط الصحيح.</p>
+              <p style="font-size:11.5px;color:var(--danger);margin-top:6px;" dir="ltr">${escapeHtml(err && err.message ? err.message : String(err))}</p>
               <button class="btn btn-primary" style="margin-top:12px;" onclick="refreshData(true)">إعادة المحاولة</button>
             </div>`;
           lucide.createIcons();
